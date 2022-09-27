@@ -38,6 +38,9 @@ D Yes or yes that it is on a separate screen to reuse in other editing parts suc
 as NFT compatible libraries for web, other systems and Flutter app (iOS,
 Android) 
 
+### End goal
+![View]((https://github.com/jacd007/story_creator/blob/main/image.jpg?raw=true))
+
 #### References:
 
 - [Video Tutorial reference #1](https://www.youtube.com/watch?v=PTyvarfJiW8&list=LL&index=60&ab_channel=HamedHamedi)
