@@ -1,7 +1,6 @@
 import 'package:f_widget_to_image/story_creation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:widgets_to_image/widgets_to_image.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,7 +10,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  WidgetsToImageController controller = WidgetsToImageController();
   // to save image bytes of widget
   Uint8List? bytes;
 

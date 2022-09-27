@@ -234,6 +234,7 @@ class _StoryCreationState extends State<StoryCreation> {
   }
 
   void funOpenGalery() async {
+    // ignore: no_leading_underscores_for_local_identifiers
     final _size = MediaQuery.of(context).size;
     FilePickerResult? result = await FilePicker.platform.pickFiles();
     if (result == null) return;
@@ -251,7 +252,7 @@ class _StoryCreationState extends State<StoryCreation> {
         ..position = pos
         ..width = w
         ..height = h
-        ..value = result.files.single.path!;
+        ..value = file.path;
     } else {
       listEditableItem.add(
         EditableItem()
@@ -261,7 +262,7 @@ class _StoryCreationState extends State<StoryCreation> {
           ..position = pos
           ..width = w
           ..height = h
-          ..value = result.files.single.path!,
+          ..value = file.path,
       );
     }
 
