@@ -39,7 +39,7 @@ as NFT compatible libraries for web, other systems and Flutter app (iOS,
 Android) 
 
 ### End goal
-![View]((https://github.com/jacd007/story_creator/blob/main/image.jpg?raw=true))
+![View](https://github.com/jacd007/story_creator/blob/main/image.jpg)
 
 #### References:
 
