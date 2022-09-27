@@ -7,7 +7,6 @@ import 'package:f_widget_to_image/constants.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:widgets_to_image/widgets_to_image.dart';
 
 class StoryCreation extends StatefulWidget {

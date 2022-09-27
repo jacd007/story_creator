@@ -1,4 +1,4 @@
-package com.example.f_widget_to_image
+package com.jacd007.story_creator
 
 import io.flutter.embedding.android.FlutterActivity
 
