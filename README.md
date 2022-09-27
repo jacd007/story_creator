@@ -4,22 +4,15 @@ A new Flutter project.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This project is the start of a clone feature of Instagram, the story creation feature.
 
 A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- [Video Tutorial reference #1](https://www.youtube.com/watch?v=PTyvarfJiW8&list=LL&index=60&ab_channel=HamedHamedi)
+- [Video Tutorial reference #2](https://www.youtube.com/watch?v=DSJ5vONP3XM&ab_channel=JohannesMilke)
+- [Video Tutorial reference #3](https://www.youtube.com/watch?v=x2mg9q7_yzY&ab_channel=JohannesMilke)
 
 For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+[Reference libraries #1](https://pub.dev/packages/story_maker), [Reference libraries #2](https://pub.dev/packages/stories_editor).
 
 
-### References
-
-- https://www.youtube.com/watch?v=PTyvarfJiW8&list=LL&index=60&ab_channel=HamedHamedi
-
-- https://www.youtube.com/watch?v=DSJ5vONP3XM&ab_channel=JohannesMilke
-
-- https://www.youtube.com/watch?v=x2mg9q7_yzY&ab_channel=JohannesMilke
