@@ -48,7 +48,17 @@ Android)
 - [Video Tutorial reference #3](https://www.youtube.com/watch?v=x2mg9q7_yzY&ab_channel=JohannesMilke)
 - [Tutorial references #4](https://flutterawesome.com/convert-widget-to-image-in-flutter/)
 
-Pub.dev library references
-[Reference libraries #1](https://pub.dev/packages/story_maker), [Reference libraries #2](https://pub.dev/packages/stories_editor).
+Pub.dev library references:
+- [Reference libraries #1](https://pub.dev/packages/story_maker) 
+- [Reference libraries #2](https://pub.dev/packages/stories_editor)
+- [Reference libraries #3](https://pub.dev/packages/text_editor)
+- [Reference libraries #4](https://pub.dev/packages/photofilters)
+- [References libraries #5](https://pub.dev/packages/story_painter)
+- [References libraries #6](https://pub.dev/packages/polls)
+
+
+### NOTE:
+- Use the minimum of third-party libraries, the idea is to replicate those functions only with the Flutter SDK.
+- Fork the branch, now to add more .dart files create a folder inside "lib" where it contains all your files
 
 
