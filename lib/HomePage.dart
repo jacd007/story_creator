@@ -23,18 +23,13 @@ class _HomePageState extends State<HomePage> {
         onPressed: () => Navigator.of(context)
             .push(
           MaterialPageRoute(
-            builder: (_) => StoryCreation(
-                /* onCompleted: (file) {
-                // here code
-              }, */
-                ),
+            builder: (_) => const StoryCreation(),
           ),
         )
             .then((value) {
-          if (value != null)
-            setState(() {
-              bytes = value;
-            });
+          if (value != null) {
+            setState(() => bytes = value);
+          }
         }),
       ),
       body: ListView(
