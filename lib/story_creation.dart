@@ -7,6 +7,7 @@ import 'package:f_widget_to_image/constants.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:text_editor/text_editor.dart';
 import 'package:widgets_to_image/widgets_to_image.dart';
 
 class StoryCreation extends StatefulWidget {
@@ -39,6 +40,27 @@ class _StoryCreationState extends State<StoryCreation> {
 
   bool _inAction = false, showDelete = false;
 
+  final fonts = [
+    'OpenSans',
+    'Billabong',
+    'GrandHotel',
+    'Oswald',
+    'Quicksand',
+    'BeautifulPeople',
+    'BeautyMountains',
+    'BiteChocolate',
+    'BlackberryJam',
+    'BunchBlossoms',
+    'CinderelaRegular',
+    'Countryside',
+    'Halimun',
+    'LemonJelly',
+    'QuiteMagicalRegular',
+    'Tomatoes',
+    'TropicalAsianDemoRegular',
+    'VeganStyle',
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -54,45 +76,11 @@ class _StoryCreationState extends State<StoryCreation> {
   @override
   Widget build(BuildContext context) {
     final screen = MediaQuery.of(context).size;
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: [SystemUiOverlay.bottom]);
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(Icons.arrow_back_ios_new),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              final rn = Random();
-              final pos = rn.nextInt(colorsList.length);
-              setState(() {
-                colorBackground = colorsList[pos];
-              });
-            },
-            icon: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                color: Colors.white,
-              ),
-              padding: const EdgeInsets.all(0.25),
-              child: Icon(
-                Icons.circle,
-                color: colorBackground,
-              ),
-            ),
-          ),
-          IconButton(
-            onPressed: funAddText,
-            icon: const Icon(Icons.text_fields),
-          ),
-          IconButton(
-            onPressed: funOpenGalery,
-            icon: const Icon(Icons.image),
-          ),
-        ],
-      ),
+      backgroundColor: const Color.fromARGB(255, 0, 19, 24),
       body: GestureDetector(
         onLongPressMoveUpdate: (_) {
           setState(() {
@@ -132,9 +120,71 @@ class _StoryCreationState extends State<StoryCreation> {
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: Stack(
-                    children: listEditableItem.map(_buildItemWidget).toList(),
+                    children: [
+                      for (int i = 0; i < listEditableItem.length; i++)
+                        _buildItemWidget(listEditableItem[i], i),
+                    ],
+                    //children: listEditableItem.map(_buildItemWidget).toList(),
                   ),
                 ),
+              ),
+            ),
+            Positioned(
+              top: 25,
+              left: 10,
+              right: 10,
+              child: Row(
+                children: [
+                  IconButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    icon: const CircleAvatar(
+                      backgroundColor: Colors.black38,
+                      child: Icon(
+                        Icons.arrow_back_ios_new,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                  const Spacer(),
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: funChangeColorBg,
+                        icon: CircleAvatar(
+                          backgroundColor: Colors.black38,
+                          child: Icon(
+                            Icons.circle,
+                            color: colorBackground,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: funAddText,
+                        icon: const CircleAvatar(
+                          backgroundColor: Colors.black38,
+                          child: Icon(
+                            Icons.text_fields,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: funOpenGalery,
+                        icon: const CircleAvatar(
+                          backgroundColor: Colors.black38,
+                          child: Icon(
+                            Icons.image,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
             /*  // to Eliminate
@@ -162,7 +212,10 @@ class _StoryCreationState extends State<StoryCreation> {
                 // ignore: use_build_context_synchronously
                 Navigator.of(context).pop(bytes);
               },
-              icon: const Icon(Icons.save),
+              icon: const Icon(
+                Icons.save,
+                color: Colors.white,
+              ),
             )
           ],
         ),
@@ -170,7 +223,7 @@ class _StoryCreationState extends State<StoryCreation> {
     );
   }
 
-  Widget _buildItemWidget(EditableItem e) {
+  Widget _buildItemWidget(EditableItem e, [int? pos]) {
     final screen = MediaQuery.of(context).size;
 
     Widget widget = const SizedBox();
@@ -193,15 +246,26 @@ class _StoryCreationState extends State<StoryCreation> {
       }
     }
     if (e.type == 1) {
-      widget = Container(
-        padding: const EdgeInsets.all(10.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(14),
-        ),
-        child: Text(
-          e.value,
-          style: const TextStyle(color: Colors.black),
+      var meta = e.metaData!;
+      final st = (meta['style'] as TextStyle);
+      final al = (meta['align'] as TextAlign);
+
+      widget = GestureDetector(
+        onTap: () {
+          funAddText(
+              stext: e.value, textStyle: st, position: pos, offset: e.position);
+        },
+        child: Container(
+          padding: const EdgeInsets.all(10.0),
+          decoration: BoxDecoration(
+            color: st.color?.withOpacity(0.2),
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: Text(
+            e.value,
+            style: st,
+            textAlign: al,
+          ),
         ),
       );
     }
@@ -231,6 +295,14 @@ class _StoryCreationState extends State<StoryCreation> {
         ),
       ),
     );
+  }
+
+  void funChangeColorBg() {
+    final rn = Random();
+    final pos = rn.nextInt(colorsList.length);
+    setState(() {
+      colorBackground = colorsList[pos];
+    });
   }
 
   void funOpenGalery() async {
@@ -272,7 +344,61 @@ class _StoryCreationState extends State<StoryCreation> {
     });
   }
 
-  funAddText({bool clear = true}) {
+  funAddText(
+      {String stext = '',
+      TextStyle? textStyle,
+      int? position,
+      Offset? offset}) {
+    showDialog(
+      context: context,
+      builder: (_) => SafeArea(
+        child: Scaffold(
+          backgroundColor: Colors.black38,
+          body: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: TextEditor(
+              fonts: fonts,
+              paletteColors: colorsList,
+              text: stext,
+              textStyle: textStyle ?? const TextStyle(color: Colors.white),
+              textAlingment: TextAlign.center,
+              onEditCompleted: (style, align, text) {
+                if (position != null) {
+                  listEditableItem[position] = EditableItem()
+                    ..type = 1
+                    ..typeValue = 'text'
+                    ..scale = 1.0
+                    ..position = offset ?? const Offset(0.1, 0.1)
+                    ..value = text
+                    ..metaData = {
+                      "style": style,
+                      "align": align,
+                    };
+                } else {
+                  listEditableItem.add(
+                    EditableItem()
+                      ..type = 1
+                      ..typeValue = 'text'
+                      ..scale = 1.0
+                      ..position = const Offset(0.1, 0.1)
+                      ..value = text
+                      ..metaData = {
+                        "style": style,
+                        "align": align,
+                      },
+                  );
+                }
+
+                Navigator.of(context).pop();
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /* funAddText({bool clear = true}) {
     //final _size = MediaQuery.of(context).size;
     if (clear) ctrText.clear();
 
@@ -319,7 +445,7 @@ class _StoryCreationState extends State<StoryCreation> {
             ),
           );
         });
-  }
+  } */
 }
 
 //enum ItemType { Image, Text }
@@ -334,6 +460,7 @@ class EditableItem {
   // ItemType type = ItemType.Image;
   int type = 0;
   String value = '';
+  Map<String, dynamic>? metaData;
 }
 
 final mockData = [

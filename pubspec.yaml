@@ -15,10 +15,14 @@ dependencies:
 
   # Libraries.
   cupertino_icons: ^1.0.2
-  widgets_to_image: any
   file_picker: 
   path_provider: ^2.0.8
   path: ^1.8.0
+  permission_handler: ^10.1.0
+  downloads_path_provider_28: ^0.1.2
+  # ADDS
+  widgets_to_image: any
+  text_editor: ^0.7.0
 
 dev_dependencies:
   flutter_test:
@@ -47,17 +51,58 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/custom-fonts/#from-packages
+  fonts:
+    - family: Billabong
+      fonts:
+        - asset: fonts/Billabong.ttf
+    - family: GrandHotel
+      fonts:
+        - asset: fonts/GrandHotel.otf
+    - family: OpenSans
+      fonts:
+        - asset: fonts/OpenSans.ttf
+    - family: Oswald
+      fonts:
+        - asset: fonts/Oswald.ttf
+    - family: Quicksand
+      fonts:
+        - asset: fonts/Quicksand.otf
+    - family: BeautifulPeople
+      fonts:
+        - asset: fonts/BeautifulPeople.ttf
+    - family: BeautyMountains
+      fonts:
+        - asset: fonts/BeautyMountains.ttf
+    - family: BiteChocolate
+      fonts:
+        - asset: fonts/BiteChocolate.ttf
+    - family: BlackberryJam
+      fonts:
+        - asset: fonts/BlackberryJam.ttf
+    - family: Tomatoes
+      fonts:
+        - asset: fonts/Tomatoes.ttf
+    - family: BunchBlossoms
+      fonts:
+        - asset: fonts/BunchBlossoms.ttf
+    - family: CinderelaRegular
+      fonts:
+        - asset: fonts/CinderelaRegular.ttf
+    - family: Countryside
+      fonts:
+        - asset: fonts/Countryside.ttf
+    - family: Halimun
+      fonts:
+        - asset: fonts/Halimun.ttf
+    - family: LemonJelly
+      fonts:
+        - asset: fonts/LemonJelly.ttf
+    - family: QuiteMagicalRegular
+      fonts:
+        - asset: fonts/QuiteMagicalRegular.ttf
+    - family: TropicalAsianDemoRegular
+      fonts:
+        - asset: fonts/TropicalAsianDemoRegular.ttf
+    - family: VeganStyle
+      fonts:
+        - asset: fonts/VeganStyle.ttf
