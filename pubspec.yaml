@@ -23,6 +23,7 @@ dependencies:
   # ADDS
   widgets_to_image: any
   text_editor: ^0.7.0
+  #painter: ^2.0.0
 
 dev_dependencies:
   flutter_test:

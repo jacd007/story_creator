@@ -76,148 +76,163 @@ class _StoryCreationState extends State<StoryCreation> {
   @override
   Widget build(BuildContext context) {
     final screen = MediaQuery.of(context).size;
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-        overlays: [SystemUiOverlay.bottom]);
+    /* SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: [SystemUiOverlay.bottom]); */
 
-    return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 0, 19, 24),
-      body: GestureDetector(
-        onLongPressMoveUpdate: (_) {
-          setState(() {
-            showDelete = false;
-          });
-        },
-        onScaleStart: (details) {
-          if (_activeItem == null) return;
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: const Color.fromARGB(255, 0, 19, 24),
+        body: GestureDetector(
+          onLongPressMoveUpdate: (_) {
+            setState(() {
+              showDelete = false;
+            });
+          },
+          onScaleStart: (details) {
+            if (_activeItem == null) return;
 
-          _initPos = details.focalPoint;
-          _currentPos = _activeItem!.position;
-          _currentScale = _activeItem!.scale;
-          _currentRotation = _activeItem!.rotation;
-        },
-        onScaleUpdate: (details) {
-          if (_activeItem == null) return;
-          final delta = details.focalPoint - _initPos;
-          final left = (delta.dx / screen.width) + _currentPos.dx;
-          final top = (delta.dy / screen.height) + _currentPos.dy;
+            _initPos = details.focalPoint;
+            _currentPos = _activeItem!.position;
+            _currentScale = _activeItem!.scale;
+            _currentRotation = _activeItem!.rotation;
+          },
+          onScaleUpdate: (details) {
+            if (_activeItem == null) return;
+            final delta = details.focalPoint - _initPos;
+            final left = (delta.dx / screen.width) + _currentPos.dx;
+            final top = (delta.dy / screen.height) + _currentPos.dy;
 
-          setState(() {
-            _activeItem!.position = Offset(left, top);
-            _activeItem!.rotation = details.rotation + _currentRotation;
-            _activeItem!.scale =
-                max(min(details.scale * _currentScale, 3), 0.2);
-          });
-        },
-        child: Stack(
-          children: [
-            WidgetsToImage(
-              controller: controller,
-              child: Container(
-                color: Colors.transparent,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: colorBackground,
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: Stack(
-                    children: [
-                      for (int i = 0; i < listEditableItem.length; i++)
-                        _buildItemWidget(listEditableItem[i], i),
-                    ],
-                    //children: listEditableItem.map(_buildItemWidget).toList(),
+            setState(() {
+              _activeItem!.position = Offset(left, top);
+              _activeItem!.rotation = details.rotation + _currentRotation;
+              _activeItem!.scale =
+                  max(min(details.scale * _currentScale, 3), 0.2);
+            });
+          },
+          child: Stack(
+            children: [
+              WidgetsToImage(
+                controller: controller,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(14),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: colorBackground,
+                      gradient: LinearGradient(
+                        colors: colorBackground == null
+                            ? []
+                            : [
+                                colorBackground!.withOpacity(0.25),
+                                colorBackground!.withOpacity(0.5),
+                                colorBackground!.withOpacity(0.75),
+                                colorBackground!.withOpacity(1.0),
+                                colorBackground!,
+                              ],
+                        begin: Alignment.bottomRight,
+                        end: Alignment.topLeft,
+                        stops: const [
+                          0.0,
+                          0.10,
+                          0.3,
+                          0.5,
+                          0.9,
+                        ],
+                      ),
+                    ),
+                    child: Stack(
+                      children: [
+                        for (int i = 0; i < listEditableItem.length; i++)
+                          _buildItemWidget(listEditableItem[i], i),
+                      ],
+                      //children: listEditableItem.map(_buildItemWidget).toList(),
+                    ),
                   ),
                 ),
               ),
-            ),
-            Positioned(
-              top: 25,
-              left: 10,
-              right: 10,
-              child: Row(
-                children: [
-                  IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: const CircleAvatar(
-                      backgroundColor: Colors.black38,
-                      child: Icon(
+              Positioned(
+                top: 25,
+                left: 10,
+                right: 10,
+                child: Row(
+                  children: [
+                    _button(
+                      child: const Icon(
                         Icons.arrow_back_ios_new,
                         color: Colors.white,
                         size: 20,
                       ),
+                      onPressed: () => Navigator.of(context).pop(),
                     ),
-                  ),
-                  const Spacer(),
-                  Row(
-                    children: [
-                      IconButton(
-                        onPressed: funChangeColorBg,
-                        icon: CircleAvatar(
-                          backgroundColor: Colors.black38,
-                          child: Icon(
-                            Icons.circle,
-                            color: colorBackground,
-                            size: 20,
+                    const Spacer(),
+                    Row(
+                      children: [
+                        _button(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.black38,
+                            child: Icon(
+                              Icons.circle,
+                              color: colorBackground,
+                              size: 30,
+                            ),
                           ),
+                          onPressed: funChangeColorBg,
                         ),
-                      ),
-                      IconButton(
-                        onPressed: funAddText,
-                        icon: const CircleAvatar(
-                          backgroundColor: Colors.black38,
-                          child: Icon(
+                        const SizedBox(width: 10),
+                        _button(
+                          child: const Icon(
                             Icons.text_fields,
                             color: Colors.white,
                             size: 20,
                           ),
+                          onPressed: funAddText,
                         ),
-                      ),
-                      IconButton(
-                        onPressed: funOpenGalery,
-                        icon: const CircleAvatar(
-                          backgroundColor: Colors.black38,
-                          child: Icon(
-                            Icons.image,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            /*  // to Eliminate
-            if (_inAction)
-              Positioned(
-                bottom: 20,
-                left: 0,
-                right: 0,
-                child: FloatingActionButton(
-                  onPressed: () {},
-                  child: const Icon(Icons.delete_forever),
+                      ],
+                    ),
+                  ],
                 ),
-              ), */
-          ],
-        ),
-      ),
-      bottomNavigationBar: SizedBox(
-        height: 50,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            IconButton(
-              onPressed: () async {
-                bytes = await controller.capture();
-                // ignore: use_build_context_synchronously
-                Navigator.of(context).pop(bytes);
-              },
-              icon: const Icon(
-                Icons.save,
-                color: Colors.white,
               ),
-            )
-          ],
+              /*  // to Eliminate
+              if (_inAction)
+                Positioned(
+                  bottom: 20,
+                  left: 0,
+                  right: 0,
+                  child: FloatingActionButton(
+                    onPressed: () {},
+                    child: const Icon(Icons.delete_forever),
+                  ),
+                ), */
+            ],
+          ),
+        ),
+        bottomNavigationBar: Container(
+          height: 60,
+          padding: const EdgeInsets.all(20.0).copyWith(top: 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                onPressed: funOpenGalery,
+                icon: const Icon(
+                  Icons.image,
+                  color: Colors.white,
+                  size: 35,
+                ),
+              ),
+              IconButton(
+                onPressed: () async {
+                  bytes = await controller.capture();
+                  // ignore: use_build_context_synchronously
+                  Navigator.of(context).pop(bytes);
+                },
+                icon: const Icon(
+                  Icons.save,
+                  color: Colors.white,
+                  size: 35,
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -237,6 +252,11 @@ class _StoryCreationState extends State<StoryCreation> {
             File(e.value),
             width: e.width,
             height: e.width,
+            errorBuilder: (context, error, stackTrace) => Image.asset(
+              'error',
+              width: e.width,
+              height: e.width,
+            ),
           );
           break;
         case 'network':
@@ -257,10 +277,10 @@ class _StoryCreationState extends State<StoryCreation> {
         },
         child: Container(
           padding: const EdgeInsets.all(10.0),
-          decoration: BoxDecoration(
+          /* decoration: BoxDecoration(
             color: st.color?.withOpacity(0.2),
             borderRadius: BorderRadius.circular(14),
-          ),
+          ), */
           child: Text(
             e.value,
             style: st,
@@ -447,6 +467,27 @@ class _StoryCreationState extends State<StoryCreation> {
         });
   } */
 }
+
+Widget _button(
+        {required Widget child,
+        void Function()? onPressed,
+        double size = 35.0}) =>
+    Container(
+      decoration: BoxDecoration(
+        color: Colors.black45,
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: Colors.white,
+          width: 2.0,
+        ),
+      ),
+      width: size,
+      height: size,
+      child: GestureDetector(
+        onTap: onPressed,
+        child: child,
+      ),
+    );
 
 //enum ItemType { Image, Text }
 
