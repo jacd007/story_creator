@@ -1,4 +1,4 @@
-package com.jacd007.story_creator
+package com.jacd007.story_creation
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -4,10 +4,12 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:f_widget_to_image/constants.dart';
+import 'package:f_widget_to_image/story/video_items.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:text_editor/text_editor.dart';
+import 'package:video_player/video_player.dart';
 import 'package:widgets_to_image/widgets_to_image.dart';
 
 class StoryCreation extends StatefulWidget {
@@ -38,7 +40,9 @@ class _StoryCreationState extends State<StoryCreation> {
 
   double _currentScale = 1.0, _currentRotation = 0.0;
 
-  bool _inAction = false, showDelete = false;
+  bool _inAction = false, showDelete = false, _hasFile = false;
+
+  VideoPlayerController? playerController;
 
   final fonts = [
     'OpenSans',
@@ -71,6 +75,8 @@ class _StoryCreationState extends State<StoryCreation> {
   void dispose() {
     super.dispose();
     ctrText.dispose();
+    playerController?.pause();
+    playerController?.dispose();
   }
 
   @override
@@ -81,7 +87,7 @@ class _StoryCreationState extends State<StoryCreation> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 0, 19, 24),
+        backgroundColor: Colors.black,
         body: GestureDetector(
           onLongPressMoveUpdate: (_) {
             setState(() {
@@ -116,29 +122,7 @@ class _StoryCreationState extends State<StoryCreation> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(14),
                   child: Container(
-                    decoration: BoxDecoration(
-                      color: colorBackground,
-                      gradient: LinearGradient(
-                        colors: colorBackground == null
-                            ? []
-                            : [
-                                colorBackground!.withOpacity(0.25),
-                                colorBackground!.withOpacity(0.5),
-                                colorBackground!.withOpacity(0.75),
-                                colorBackground!.withOpacity(1.0),
-                                colorBackground!,
-                              ],
-                        begin: Alignment.bottomRight,
-                        end: Alignment.topLeft,
-                        stops: const [
-                          0.0,
-                          0.10,
-                          0.3,
-                          0.5,
-                          0.9,
-                        ],
-                      ),
-                    ),
+                    decoration: decoration(),
                     child: Stack(
                       children: [
                         for (int i = 0; i < listEditableItem.length; i++)
@@ -212,9 +196,9 @@ class _StoryCreationState extends State<StoryCreation> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               IconButton(
-                onPressed: funOpenGalery,
-                icon: const Icon(
-                  Icons.image,
+                onPressed: _hasFile ? funDeleteFile : funOpenGalery,
+                icon: Icon(
+                  _hasFile ? Icons.delete : Icons.image,
                   color: Colors.white,
                   size: 35,
                 ),
@@ -248,16 +232,25 @@ class _StoryCreationState extends State<StoryCreation> {
           widget = Image.asset(e.value);
           break;
         case 'file':
-          widget = Image.file(
-            File(e.value),
-            width: e.width,
-            height: e.width,
-            errorBuilder: (context, error, stackTrace) => Image.asset(
-              'error',
+          debugPrint(e.value);
+          if (e.value.split(".").last.endsWith('mp4')) {
+            playerController = VideoPlayerController.file(File(e.value));
+            widget = VideoItems(
+              videoPlayerController: playerController!,
+            );
+          } else {
+            widget = Image.file(
+              File(e.value),
               width: e.width,
               height: e.width,
-            ),
-          );
+              errorBuilder: (context, error, stackTrace) => Image.asset(
+                'error',
+                width: e.width,
+                height: e.width,
+              ),
+            );
+          }
+
           break;
         case 'network':
           widget = Image.network(e.value);
@@ -325,6 +318,12 @@ class _StoryCreationState extends State<StoryCreation> {
     });
   }
 
+  void funDeleteFile() {
+    listEditableItem.removeAt(0);
+    setState(() => _hasFile = false);
+    return;
+  }
+
   void funOpenGalery() async {
     // ignore: no_leading_underscores_for_local_identifiers
     final _size = MediaQuery.of(context).size;
@@ -337,7 +336,7 @@ class _StoryCreationState extends State<StoryCreation> {
     double h = _size.height;
 
     if (listEditableItem.isNotEmpty) {
-      listEditableItem[0] = EditableItem()
+      var edit = EditableItem()
         ..type = 0
         ..typeValue = 'file'
         ..scale = 0.8
@@ -345,6 +344,8 @@ class _StoryCreationState extends State<StoryCreation> {
         ..width = w
         ..height = h
         ..value = file.path;
+      listEditableItem[0] = edit;
+      //listEditableItem.insert(0, edit);
     } else {
       listEditableItem.add(
         EditableItem()
@@ -361,6 +362,7 @@ class _StoryCreationState extends State<StoryCreation> {
     setState(() {
       _initPos = const Offset(0.1, 0.1);
       _currentPos = const Offset(0.1, 0.1);
+      _hasFile = true;
     });
   }
 
@@ -417,6 +419,36 @@ class _StoryCreationState extends State<StoryCreation> {
       ),
     );
   }
+
+  decoration() => BoxDecoration(
+        color: colorBackground,
+        gradient: LinearGradient(
+          colors: colorBackground == null
+              ? [
+                  Colors.white,
+                  Colors.white,
+                  Colors.white,
+                  Colors.white,
+                  Colors.white,
+                ]
+              : [
+                  colorBackground!.withOpacity(0.25),
+                  colorBackground!.withOpacity(0.5),
+                  colorBackground!.withOpacity(0.75),
+                  colorBackground!.withOpacity(1.0),
+                  colorBackground!,
+                ],
+          begin: Alignment.bottomRight,
+          end: Alignment.topLeft,
+          stops: const [
+            0.0,
+            0.10,
+            0.3,
+            0.5,
+            0.9,
+          ],
+        ),
+      );
 
   /* funAddText({bool clear = true}) {
     //final _size = MediaQuery.of(context).size;
@@ -478,7 +510,7 @@ Widget _button(
         shape: BoxShape.circle,
         border: Border.all(
           color: Colors.white,
-          width: 2.0,
+          width: 1.5,
         ),
       ),
       width: size,
