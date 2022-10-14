@@ -7,15 +7,15 @@ A new Flutter project.
 This project is the start of a clone feature of Instagram, the story creation feature.
 
 ### Tasks
-- Write and supertext (partially done)
+- Write and supertext (done)
 - Rotate resources (images, text, videos) on the screen with your own fingers (partially done)
 - Add URL
-- Labels (partially done)
+- Labels (done)
 - Mentions 
 - hashtags
 - Color filters
 - Colorful background (done)
-- Text with color palette
+- Text with color palette (done)
 - Precise location
 - Draw with your finger
 - Stickers
@@ -56,6 +56,9 @@ Pub.dev library references:
 - [References libraries #5](https://pub.dev/packages/story_painter)
 - [References libraries #6](https://pub.dev/packages/polls)
 
+
+### saved
+![View](https://github.com/jacd007/story_creator/blob/main/assets/video.mp4)
 
 ### NOTE:
 - Use the minimum of third-party libraries, the idea is to replicate those functions only with the Flutter SDK.

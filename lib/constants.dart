@@ -1,32 +1,31 @@
-//WidgetsToImageController controller = WidgetsToImageController();
-// to save image bytes of widget
-// Uint8List? bytes;
-/*
-  final void Function(File?) onCompleted;
-  final void Function()? onBack;
-*/
-
 import 'package:flutter/material.dart';
 
+// ignore: constant_identifier_names
+//const String TABLE_EDITABLE_ITEM_BOX = 'MyBox';
+
+enum TableRowBox { eraser, schedule, colorBG }
+
+enum ItemType { assets, file, network, text }
+
 final colorsList = [
-  Colors.black,
   Colors.white,
-  Colors.blue,
+  Colors.indigo,
+  Colors.deepPurple,
+  Colors.purple,
   Colors.pink,
   Colors.red,
-  Colors.orange,
-  Colors.green,
-  Colors.purple,
-  Colors.deepPurple,
-  Colors.yellow,
-  Colors.brown,
-  Colors.cyan,
   Colors.deepOrange,
-  Colors.indigo,
-  Colors.lightBlue,
-  Colors.lightGreen,
-  Colors.lime,
-  Colors.teal,
-  Colors.tealAccent,
+  Colors.orange,
   Colors.amber,
+  Colors.yellow,
+  Colors.lime,
+  Colors.lightGreen,
+  Colors.green,
+  Colors.teal,
+  Colors.blue,
+  Colors.lightBlue,
+  Colors.cyan,
+  Colors.tealAccent,
+  Colors.brown,
+  Colors.black,
 ];

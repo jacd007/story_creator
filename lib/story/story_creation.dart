@@ -1,19 +1,21 @@
-// ignore_for_file: constant_identifier_names
-
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:f_widget_to_image/common/editable_item_model.dart';
 import 'package:f_widget_to_image/constants.dart';
 import 'package:f_widget_to_image/story/video_items.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive/hive.dart';
 import 'package:text_editor/text_editor.dart';
 import 'package:video_player/video_player.dart';
 import 'package:widgets_to_image/widgets_to_image.dart';
 
 class StoryCreation extends StatefulWidget {
-  const StoryCreation({super.key});
+  final List<EditableItem>? listEditableItem;
+  const StoryCreation({this.listEditableItem, super.key});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -21,6 +23,8 @@ class StoryCreation extends StatefulWidget {
 }
 
 class _StoryCreationState extends State<StoryCreation> {
+  final _myBox = Hive.box('MyBox');
+
   // created
   WidgetsToImageController controller = WidgetsToImageController();
   // to save image bytes of widget
@@ -69,6 +73,24 @@ class _StoryCreationState extends State<StoryCreation> {
   void initState() {
     super.initState();
     //listEditableItem = mockData;
+    listEditableItem = widget.listEditableItem ?? [];
+    getData();
+  }
+
+  getData() {
+    final color = _myBox.get(TableRowBox.colorBG.name);
+    final List? list = _myBox.get(TableRowBox.eraser.name);
+
+    if (list != null) {
+      setState(() {
+        listEditableItem = list.map((e) => EditableItem.fromJson(e)).toList();
+      });
+    }
+    if (color != null) {
+      setState(() {
+        colorBackground = Color(color);
+      });
+    }
   }
 
   @override
@@ -203,9 +225,25 @@ class _StoryCreationState extends State<StoryCreation> {
                   size: 35,
                 ),
               ),
+              MaterialButton(
+                onPressed: () {
+                  final list = listEditableItem.map((e) {
+                    return e.toJson(e);
+                  }).toList();
+                  _myBox.put(TableRowBox.eraser.name, list);
+                  _myBox.put(TableRowBox.colorBG.name, colorBackground?.value);
+                  debugPrint('SAVED $list ${colorBackground?.value}');
+                },
+                child: const Icon(
+                  Icons.open_in_browser_rounded,
+                  color: Colors.white,
+                ),
+              ),
               IconButton(
                 onPressed: () async {
                   bytes = await controller.capture();
+                  _myBox.delete(TableRowBox.eraser.name);
+                  _myBox.delete(TableRowBox.colorBG.name);
                   // ignore: use_build_context_synchronously
                   Navigator.of(context).pop(bytes);
                 },
@@ -228,31 +266,31 @@ class _StoryCreationState extends State<StoryCreation> {
     Widget widget = const SizedBox();
     if (e.type == 0) {
       switch (e.typeValue) {
-        case 'assets':
+        case ItemType.assets:
           widget = Image.asset(e.value);
           break;
-        case 'file':
+        case ItemType.file:
           debugPrint(e.value);
           if (e.value.split(".").last.endsWith('mp4')) {
             playerController = VideoPlayerController.file(File(e.value));
             widget = VideoItems(
               videoPlayerController: playerController!,
             );
-          } else {
-            widget = Image.file(
-              File(e.value),
+            break;
+          }
+          widget = Image.file(
+            File(e.value),
+            width: e.width,
+            height: e.width,
+            errorBuilder: (context, error, stackTrace) => Image.asset(
+              'error',
               width: e.width,
               height: e.width,
-              errorBuilder: (context, error, stackTrace) => Image.asset(
-                'error',
-                width: e.width,
-                height: e.width,
-              ),
-            );
-          }
+            ),
+          );
 
           break;
-        case 'network':
+        case ItemType.network:
           widget = Image.network(e.value);
           break;
         default:
@@ -327,7 +365,9 @@ class _StoryCreationState extends State<StoryCreation> {
   void funOpenGalery() async {
     // ignore: no_leading_underscores_for_local_identifiers
     final _size = MediaQuery.of(context).size;
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+    );
     if (result == null) return;
 
     File file = File(result.files.single.path!);
@@ -338,7 +378,7 @@ class _StoryCreationState extends State<StoryCreation> {
     if (listEditableItem.isNotEmpty) {
       var edit = EditableItem()
         ..type = 0
-        ..typeValue = 'file'
+        ..typeValue = ItemType.file
         ..scale = 0.8
         ..position = pos
         ..width = w
@@ -350,7 +390,7 @@ class _StoryCreationState extends State<StoryCreation> {
       listEditableItem.add(
         EditableItem()
           ..type = 0
-          ..typeValue = 'file'
+          ..typeValue = ItemType.file
           ..scale = 0.8
           ..position = pos
           ..width = w
@@ -388,25 +428,33 @@ class _StoryCreationState extends State<StoryCreation> {
                 if (position != null) {
                   listEditableItem[position] = EditableItem()
                     ..type = 1
-                    ..typeValue = 'text'
+                    ..typeValue = ItemType.text
                     ..scale = 1.0
                     ..position = offset ?? const Offset(0.1, 0.1)
                     ..value = text
                     ..metaData = {
                       "style": style,
                       "align": align,
+                      "color": style.color!.value,
+                      "colorBG": style.backgroundColor!.value,
+                      "family": style.fontFamily,
+                      "sizeText": style.fontSize ?? 20.0,
                     };
                 } else {
                   listEditableItem.add(
                     EditableItem()
                       ..type = 1
-                      ..typeValue = 'text'
+                      ..typeValue = ItemType.text
                       ..scale = 1.0
                       ..position = const Offset(0.1, 0.1)
                       ..value = text
                       ..metaData = {
                         "style": style,
                         "align": align,
+                        "color": style.color!.value,
+                        "colorBG": style.backgroundColor!.value,
+                        "family": style.fontFamily,
+                        "sizeText": style.fontSize ?? 20.0,
                       },
                   );
                 }
@@ -521,19 +569,8 @@ Widget _button(
       ),
     );
 
-//enum ItemType { Image, Text }
-
-class EditableItem {
-  Offset position = const Offset(0.1, 0.1);
-  double scale = 1.0;
-  double rotation = 0.0;
-  double width = 100;
-  double height = 100;
-  String typeValue = 'assets';
-  // ItemType type = ItemType.Image;
-  int type = 0;
-  String value = '';
-  Map<String, dynamic>? metaData;
+Uint8List imageFromBase64String(String base64String) {
+  return base64Decode(base64String);
 }
 
 final mockData = [

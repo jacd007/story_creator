@@ -2,11 +2,14 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
+import 'package:f_widget_to_image/common/editable_item_model.dart';
+import 'package:f_widget_to_image/constants.dart';
 // ignore: unused_import
 import 'package:f_widget_to_image/story/poll_widget.dart';
 import 'package:f_widget_to_image/story/story_creation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 // ignore: unused_import
 import 'package:permission_handler/permission_handler.dart';
@@ -26,6 +29,8 @@ class _HomePageState extends State<HomePage> {
   File? filed;
   bool bloc = false;
   Color? colorDown;
+
+  final _myBox = Hive.openBox('MyBox');
 
   @override
   void dispose() {
