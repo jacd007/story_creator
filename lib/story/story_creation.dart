@@ -438,8 +438,9 @@ class _StoryCreationState extends State<StoryCreation> {
                     ..metaData = {
                       "style": style,
                       "align": align,
-                      "color": style.color!.value,
-                      "colorBG": style.backgroundColor!.value,
+                      "color": style.color?.value ?? Colors.white.value,
+                      "colorBG": style.backgroundColor?.value ??
+                          Colors.transparent.value,
                       "family": style.fontFamily,
                       "sizeText": style.fontSize ?? 20.0,
                     };
@@ -454,8 +455,9 @@ class _StoryCreationState extends State<StoryCreation> {
                       ..metaData = {
                         "style": style,
                         "align": align,
-                        "color": style.color!.value,
-                        "colorBG": style.backgroundColor!.value,
+                        "color": style.color?.value ?? Colors.white.value,
+                        "colorBG": style.backgroundColor?.value ??
+                            Colors.transparent.value,
                         "family": style.fontFamily,
                         "sizeText": style.fontSize ?? 20.0,
                       },
