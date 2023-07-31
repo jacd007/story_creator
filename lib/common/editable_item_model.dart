@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:f_widget_to_image/constants.dart';
+import '../common/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 

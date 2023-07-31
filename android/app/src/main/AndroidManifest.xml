@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
  
    <application
-        android:label="f_widget_to_image"
+        android:label="Story Creator V1"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:requestLegacyExternalStorage="true"

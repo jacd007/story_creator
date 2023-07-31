@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:f_widget_to_image/common/editable_item_model.dart';
-import 'package:f_widget_to_image/constants.dart';
-import 'package:f_widget_to_image/story/video_items.dart';
+import '../common/editable_item_model.dart';
+import '../common/constants.dart';
+import '../story/video_items.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -59,7 +59,7 @@ class _StoryCreationState extends State<StoryCreation> {
     'BiteChocolate',
     'BlackberryJam',
     'BunchBlossoms',
-    'CinderelaRegular',
+    'CinderellaRegular',
     'Countryside',
     'Halimun',
     'LemonJelly',
@@ -218,7 +218,7 @@ class _StoryCreationState extends State<StoryCreation> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               IconButton(
-                onPressed: _hasFile ? funDeleteFile : funOpenGalery,
+                onPressed: _hasFile ? funDeleteFile : funOpenGallery,
                 icon: Icon(
                   _hasFile ? Icons.delete : Icons.image,
                   color: Colors.white,
@@ -304,7 +304,10 @@ class _StoryCreationState extends State<StoryCreation> {
       widget = GestureDetector(
         onTap: () {
           funAddText(
-              stext: e.value, textStyle: st, position: pos, offset: e.position);
+              strText: e.value,
+              textStyle: st,
+              position: pos,
+              offset: e.position);
         },
         child: Container(
           padding: const EdgeInsets.all(10.0),
@@ -362,7 +365,7 @@ class _StoryCreationState extends State<StoryCreation> {
     return;
   }
 
-  void funOpenGalery() async {
+  void funOpenGallery() async {
     // ignore: no_leading_underscores_for_local_identifiers
     final _size = MediaQuery.of(context).size;
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -407,7 +410,7 @@ class _StoryCreationState extends State<StoryCreation> {
   }
 
   funAddText(
-      {String stext = '',
+      {String strText = '',
       TextStyle? textStyle,
       int? position,
       Offset? offset}) {
@@ -421,7 +424,7 @@ class _StoryCreationState extends State<StoryCreation> {
             child: TextEditor(
               fonts: fonts,
               paletteColors: colorsList,
-              text: stext,
+              text: strText,
               textStyle: textStyle ?? const TextStyle(color: Colors.white),
               textAlingment: TextAlign.center,
               onEditCompleted: (style, align, text) {

@@ -1,19 +1,14 @@
+// ignore_for_file: file_names
+
 import 'dart:async';
 import 'dart:io';
 
 import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
-import 'package:f_widget_to_image/common/editable_item_model.dart';
-import 'package:f_widget_to_image/constants.dart';
-// ignore: unused_import
-import 'package:f_widget_to_image/story/poll_widget.dart';
-import 'package:f_widget_to_image/story/story_creation.dart';
+import '../story/story_creation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
-// ignore: unused_import
-import 'package:permission_handler/permission_handler.dart';
-//import 'package:share_plus/share_plus.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -30,6 +25,7 @@ class _HomePageState extends State<HomePage> {
   bool bloc = false;
   Color? colorDown;
 
+  // ignore: unused_field
   final _myBox = Hive.openBox('MyBox');
 
   @override
@@ -130,7 +126,7 @@ class _HomePageState extends State<HomePage> {
     //final status = await Permission.manageExternalStorage.request();
 
     if (bloc) return;
-    bool _check = false;
+    bool check = false;
 
     loading.add(-1);
     setState(() => bloc = true);
@@ -140,7 +136,7 @@ class _HomePageState extends State<HomePage> {
       final file = await createFileFromUint8List(bytes!, 'png');
       filed = file;
       debugPrint('COMPLETED $file');
-      _check = true;
+      check = true;
     } on Exception catch (e) {
       debugPrint('$e');
     }
@@ -148,15 +144,15 @@ class _HomePageState extends State<HomePage> {
 
     setState(() => bloc = false);
     loading.add(0);
-    setState(() => colorDown = _check ? Colors.green : Colors.black);
+    setState(() => colorDown = check ? Colors.green : Colors.black);
     await Future.delayed(const Duration(seconds: 2));
     setState(() => colorDown = null);
   }
 
   static Future<File> createFileFromUint8List(Uint8List bytes, String ext,
       [String auxName = '']) async {
-    final dirf = await getApplicationDocumentsDirectory();
-    Directory dir1 = await DownloadsPathProvider.downloadsDirectory ?? dirf;
+    final dir2 = await getApplicationDocumentsDirectory();
+    Directory dir1 = await DownloadsPathProvider.downloadsDirectory ?? dir2;
     final epoch = DateTime.now().millisecondsSinceEpoch.toString();
     File file = File("${dir1.path}/$auxName$epoch.$ext");
     File f = await file.writeAsBytes(bytes);
@@ -164,10 +160,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   funDownLoadAlter() async {
-    ;
-
     if (bloc) return;
-    bool _check = false;
+    bool check = false;
 
     loading.add(-1);
     setState(() => bloc = true);
@@ -180,14 +174,14 @@ class _HomePageState extends State<HomePage> {
       File f = await file.writeAsBytes(bytes!);
       filed = f;
       debugPrint('COMPLETED $f');
-      _check = true;
+      check = true;
     } on Exception catch (e) {
       debugPrint('$e');
     }
 
     setState(() => bloc = false);
     loading.add(0);
-    setState(() => colorDown = _check ? Colors.green : Colors.black);
+    setState(() => colorDown = check ? Colors.green : Colors.black);
     await Future.delayed(const Duration(seconds: 2));
     setState(() => colorDown = null);
   }
